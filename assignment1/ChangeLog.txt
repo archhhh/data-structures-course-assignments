@@ -1,0 +1,9 @@
+Mar. 15: We removed the paragraph about how to use dssubmit in the handout, and
+add a paragraph about how to use Gitlab to submit the programs.
+
+Mar. 10: We fixed a bug in the sample program. postfix-eval-sample has been updated.
+
+Mar. 10: We fixed some typos in the handout.
+
+Mar. 8: The assignment has been released.
+
