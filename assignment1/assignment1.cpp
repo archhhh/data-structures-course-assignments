@@ -11,7 +11,7 @@
 #include "assignment1.h"
 #include <stdexcept>
 #include "LinkedStack.h"
-
+#include <vector>
 using namespace std;
 
 int getPriority(Token token) {
@@ -59,7 +59,7 @@ vector<Token> postfix(const vector<Token>& expression) {
           result.push_back(expression[i]);
         }else if(expression[i].getOperator() == 5)
         {
-          for(;stack.top().getOperator() != '('; stack.pop())(
+          for(;stack.top().getOperator() != '('; stack.pop())
           {
             result.push_back(stack.top());
           }
@@ -89,23 +89,23 @@ int eval(const vector<Token>& expression) {
         stack.push(expression[i]);
       }else{
         Token a = stack.top();
-        stack.pop;
+        stack.pop();
         Token b = stack.top();
-        stack.pop;
-        Token c;
-        c._type = 0;
+        stack.pop();
+        Token*c;
         switch(expression[i].getOperator())
         {
-          case 0:c._constant = a._constant + b._constant;
+          case 0:c = new Token(a.getConstant()+b.getConstant());
                  break;
-          case 1:c._constant = a._constant - b._constant;
+          case 1:c = new Token(a.getConstant()-b.getConstant());
                  break;
-          case 2:c._constant = a._constant * b._constant;
+          case 2:c = new Token(a.getConstant()*b.getConstant());
                  break;
-          case 3:c._constant = a._constant / b._constant;
+          case 3:c = new Token(a.getConstant()/b.getConstant());
                  break;
         }
-        stack.push(c);
+        stack.push(*c);
+        delete c;
       }
     }
     return stack.top().getConstant();
