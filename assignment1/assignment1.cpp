@@ -59,23 +59,25 @@ vector<Token> postfix(const vector<Token>& expression) {
           result.push_back(expression[i]);
         }else if(expression[i].getOperator() == 5)
         {
-          for(;stack.top().getOperator() != '('; stack.pop())
+          for(;stack.top().getOperator() != 4; stack.pop())
           {
             result.push_back(stack.top());
           }
           stack.pop();
         }else
         {
-          while(!stack.empty() && getInStackPriority(stack.top()) <= getPriority(expression[i]))
+          while(!stack.empty() && (getInStackPriority(stack.top()) <= getPriority(expression[i])))
           {
-              result.push_back(stack.top());
-              stack.pop();
+            result.push_back(stack.top());
+            stack.pop();
           }
           stack.push(expression[i]);
         }
     }
     while(!stack.empty())
     {
+      if(stack.top().getOperator() == 4)
+        throw runtime_error("Missing close parethnesis in an infix expression.");
       result.push_back(stack.top());
       stack.pop();
     }
@@ -89,6 +91,10 @@ int eval(const vector<Token>& expression) {
       {
         stack.push(expression[i]);
       }else{
+        if(stack.empty())
+          throw runtime_error("Cannot apply an operator on empty stack");
+        if(stack.size() == 1)
+          throw runtime_error("Cannot apply an operator to a stack with one integer only");
         Token a = stack.top();
         stack.pop();
         Token b = stack.top();
@@ -96,18 +102,23 @@ int eval(const vector<Token>& expression) {
         Token*c;
         switch(expression[i].getOperator())
         {
-          case 0:c = new Token(a.getConstant()+b.getConstant());
+          case 0:c = new Token(b.getConstant()+a.getConstant());
                  break;
-          case 1:c = new Token(a.getConstant()-b.getConstant());
+          case 1:c = new Token(b.getConstant()-a.getConstant());
                  break;
-          case 2:c = new Token(a.getConstant()*b.getConstant());
+          case 2:c = new Token(b.getConstant()*a.getConstant());
                  break;
-          case 3:c = new Token(a.getConstant()/b.getConstant());
+          case 3:c = new Token(b.getConstant()/a.getConstant());
                  break;
+          default:
+                 runtime_error("Wrong operator");
         }
         stack.push(*c);
         delete c;
       }
     }
-    return stack.top().getConstant();
+    if(stack.size() == 1)
+      return stack.top().getConstant();
+    else
+      throw runtime_error("Unfinished evaluation due to missing operators.");
 }
