@@ -66,9 +66,10 @@ vector<Token> postfix(const vector<Token>& expression) {
           stack.pop();
         }else
         {
-          for(;getInStackPriority(stack.top()) <= getPriority(expression[i]); stack.pop())
+          while(!stack.empty() && getInStackPriority(stack.top()) <= getPriority(expression[i]))
           {
-            result.push_back(stack.top());
+              result.push_back(stack.top());
+              stack.pop();
           }
           stack.push(expression[i]);
         }
