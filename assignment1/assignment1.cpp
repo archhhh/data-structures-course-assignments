@@ -14,9 +14,9 @@
   Function postfix converts already tokenized infix expression to postfix expression.
   Vector result contains the postfix expression and stack is used to contain operators. If the operand is
   encountered, simply add it to the resultant vector that represents the postfix expression. If
-  the operator follows, add all the operators with higher priority from the stack to the vector.
-  If the operator is closing bracket, add all the operators from the stack until the opening bracket
-  is met. After all the operations, add all the remaining operators that are left in the stack to the vector.
+  the operator follows, add all the operators with higher priority from the stack to the vector and
+  add the following operator to the stack. If the operator is closing bracket, add all the operators from the stack
+  until the opening bracket is met. After all the operations, add all the remaining operators that are left in the stack to the vector.
   This function throws the following exceptions. If there is opening bracket and the closing bracket is
   missing, it throws an exception. If there is closing bracket and the opening bracket is missing,
   it throws an exception.
