@@ -1,4 +1,4 @@
-//
+// Artyom Chen 20162017 artychen13@unist.ac.kr
 // README.TXT
 //
 // Please write your name, your student ID, and your email address here.
@@ -11,3 +11,5 @@
 // Notice that it is not a report of your assignment.
 //
 
+Artyom Chen 20162017 artychen13@unist.ac.kr
+All parts of the assignment were implemented.

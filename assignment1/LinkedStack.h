@@ -45,7 +45,7 @@ public:
    *
    * return a reference to the top element.
    */
-  Elem& top();
+  Elem& top() const;
 
   /*
    * Push an element onto the stack.
@@ -63,7 +63,7 @@ public:
 
 
 template<typename Elem>
-Elem& LinkedStack<Elem>::top(){
+Elem& LinkedStack<Elem>::top() const{
   if (cir_list.empty()) throw runtime_error("Cannot get the top element from an empty stack.");
   return cir_list.front();
 }

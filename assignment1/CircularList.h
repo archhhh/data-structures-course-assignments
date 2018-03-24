@@ -1,4 +1,3 @@
-//Artyom Chen 20162017 artychen13@unist.ac.kr
 //
 // CircularList.h (Version 1.0)
 //
@@ -6,6 +5,14 @@
 // Moreover, please describe the implementation of your functions here.
 // You will have to submit this file.
 //
+/*
+  Artyom Chen 20162017 artychen13@unist.ac.kr
+class CircularList consists of 3 member variables, class CNode, 9 functions and also constructor with destructor
+class CNode contains value and the pointer to the next CNode object, cursor is pointer to the last node in the list,
+space is pointer to the available space list.
+
+
+*/
 #ifndef CIRCULAR_LIST_H
 #define CIRCULAR_LIST_H
 #include <stdexcept>
@@ -18,8 +25,8 @@ public:
   CircularList();
   ~CircularList();
   bool empty() const;
-  Elem& front();
-  Elem& back();
+  Elem& front() const;
+  Elem& back() const;
   void advance();
   void add(const Elem& e);
   void remove();
@@ -55,18 +62,19 @@ CircularList<Elem>::~CircularList()
       cleanup();
 }
 template <typename Elem>
-bool CircularList<Elem>::empty() const{
+bool CircularList<Elem>::empty() const
+{
     return s == 0;
 }
 template <typename Elem>
-Elem& CircularList<Elem>::front()
+Elem& CircularList<Elem>::front() const
 {
       if(empty())
         throw runtime_error("List is empty.");
       return cursor->next->value;
 }
 template <typename Elem>
-Elem& CircularList<Elem>::back()
+Elem& CircularList<Elem>::back() const
 {
       if(empty())
         throw runtime_error("List is empty.");

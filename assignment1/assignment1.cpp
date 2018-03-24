@@ -1,3 +1,4 @@
+// Artyom Chen 20162017 artychen13@unist.ac.kr
 //
 // assignment1.cpp (Version 1.0)
 //
