@@ -11,6 +11,7 @@
 #ifndef LINKED_BINARY_TREE_H
 #define LINKED_BINARY_TREE_H
 #include <list>
+using namespace std;
 template <typename Elem>
 class LinkedBinaryTree{
 public:
@@ -64,26 +65,26 @@ private:
   Node* root;
   int n;
 };
-  LinkedBinaryTree::LinkedBinaryTree()
+  LinkedBinaryTree<Elem>::LinkedBinaryTree()
   {
     root = NULL;
     n = 0;
   }
-  int LinkedBinaryTree::size() const
+  int LinkedBinaryTree<Elem>::size() const
   {
     return n;
   }
-  bool LinkedBinaryTree::empty() const
+  bool LinkedBinaryTree<Elem>::empty() const
   {
     return n == 0;
   }
-  LinkedBinaryTree::Position LinkedBinaryTree::root() const
+  LinkedBinaryTree<Elem>::Position LinkedBinaryTree<Elem>::root() const
   {
     if(root)
       return Position(root);
     throw runtime_error("Tree is empty");
   }
-  LinkedBinaryTree::PositionList LinkedBinaryTree::positions() const
+  LinkedBinaryTree<Elem>::PositionList LinkedBinaryTree<Elem>::positions() const
   {
     PositionList pl;
     if(!root)
@@ -91,18 +92,14 @@ private:
     preorder(root, pl);
     return pl;
   }
-  void LinkedBinaryTree::addRoot()
+  void LinkedBinaryTree<Elem>::addRoot()
   {
-    if(!root)
-    {
-      root = new Node;
-      n = 1;
-    }else
-    {
+    if(root)
       throw runtime_error("Tree is non-empty.");
-    }
+    root = new Node;
+    n = 1;
   }
-  void LinkedBinaryTree::preorder(Node *v, PositionList&pl) const
+  void LinkedBinaryTree<Elem>::preorder(Node *v, PositionList&pl) const
   {
     pl.push_back(Position(v));
     if(v->left != NULL)
@@ -110,7 +107,7 @@ private:
     if(v->right != NULL)
       preorder(v->right, pl);
   }
-  void expandExternal(const Position &p)
+  void LinkedBinaryTree<Elem>::expandExternal(const Position &p)
   {
     if(p.isNull())
       throw runtime_error("NULL node.");
@@ -123,14 +120,14 @@ private:
     v->right->par = p;
     n+=2;
   }
-  LinkedBinaryTree::Position LinkedBinaryTree::removeAboveExternal(const Position&p)
+  LinkedBinaryTree<Elem>::Position LinkedBinaryTree<Elem>::removeAboveExternal(const Position&p)
   {
       if(p.isNull())
         throw runtime_error("NULL node.");
       if(!p.isExternal())
         throw runtime_error("The node p is not external.");
       if(p.isRoot())
-          throw runtime_error("Root node.");
+        throw runtime_error("Root node.");
       Node*w = p.v;
       Node*v = w->par;
       Node*sib = (w == v->left ? v->right : v->left);
@@ -152,7 +149,7 @@ private:
       n-=2;
       return Position(sib);
   }
-  int LinkedBinaryTree::height() const
+  int LinkedBinaryTree<Elem>::height() const
   {
     if(!root)
       throw runtime_error("Tree is empty");
@@ -175,7 +172,7 @@ private:
     }
     return h;
   }
-  void LinkedBinaryTree::attachLeftSubtree(const Position&p, LinkedBinaryTree&subtree)
+  void LinkedBinaryTree<Elem>::attachLeftSubtree(const Position&p, LinkedBinaryTrees&subtree)
   {
     if(p.left().v)
     {
@@ -183,7 +180,7 @@ private:
     }
     p.left().v = subtree.root().v;
   }
-  void LinkedBinaryTree::attachRightSubtree(const Position&p, LinkedBinaryTree&subtree)
+  void LinkedBinaryTree<Elem>::attachRightSubtree(const Position&p, LinkedBinaryTree&subtree)
   {
     if(p.right().v)
     {
@@ -191,8 +188,21 @@ private:
     }
     p.right().v = subtree.root().v;
   }
-  void LinkedBinaryTree::removeSubtree(const Position &p)
+  void LinkedBinaryTree<Elem>::removeSubtree(const Position &p)
   {
-
+    if(!p.isNull())
+    {
+      if(p.isExternal())
+      {
+        delete p.v;
+      }else
+      {
+        Position l = p.left();
+        Position r = p.right();
+        delete p.v;
+        removeSubtree(l);
+        removeSubtree(r);
+      }
+    }
   }
 #endif
