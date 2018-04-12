@@ -86,6 +86,8 @@ private:
   LinkedBinaryTree::PositionList LinkedBinaryTree::positions() const
   {
     PositionList pl;
+    if(!root)
+      throw runtime_error("NULL root.");
     preorder(root, pl);
     return pl;
   }
@@ -110,10 +112,10 @@ private:
   }
   void expandExternal(const Position &p)
   {
+    if(p.isNull())
+      throw runtime_error("NULL node.");
     if(!p.isExternal())
       throw runtime_error("The node p is not external.");
-    if(!p)
-      throw runtime_error("NULL node.");
     Node*v = p.v;
     v->left = new Node;
     v->left->par = p;
@@ -123,11 +125,36 @@ private:
   }
   LinkedBinaryTree::Position LinkedBinaryTree::removeAboveExternal(const Position&p)
   {
-
+      if(p.isNull())
+        throw runtime_error("NULL node.");
+      if(!p.isExternal())
+        throw runtime_error("The node p is not external.");
+      if(p.isRoot())
+          throw runtime_error("Root node.");
+      Node*w = p.v;
+      Node*v = w->par;
+      Node*sib = (w == v->left ? v->right : v->left);
+      if(v == root)
+      {
+        root = sib;
+        sib->par = NULL;
+      }else
+      {
+        Node*gpar = v->par;
+        if(v == gpar->left)
+          gpar->left = sib;
+        else
+          gpar->right = sib;
+        sib->par = gpar;
+      }
+      delete w;
+      delete v;
+      n-=2;
+      return Position(sib);
   }
   int LinkedBinaryTree::height() const
   {
-    if(!v)
+    if(!root)
       throw runtime_error("Tree is empty");
     PositionList pl = positions();
     int h = 0;
@@ -150,22 +177,22 @@ private:
   }
   void LinkedBinaryTree::attachLeftSubtree(const Position&p, LinkedBinaryTree&subtree)
   {
-    if(p.left().v->left)
+    if(p.left().v)
     {
       throw runtime_error("Node p has left child.");
     }
-    p.left().v->left = subtree.root().v;
+    p.left().v = subtree.root().v;
   }
   void LinkedBinaryTree::attachRightSubtree(const Position&p, LinkedBinaryTree&subtree)
   {
-    if(p.left().v->right)
+    if(p.right().v)
     {
       throw runtime_error("Node p has right child.");
     }
-    p.left().v->right = subtree.root().v;
+    p.right().v = subtree.root().v;
   }
   void LinkedBinaryTree::removeSubtree(const Position &p)
   {
-    
+
   }
 #endif
