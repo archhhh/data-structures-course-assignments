@@ -16,9 +16,9 @@
 #include "assignment2.h"
 
 
-LinkedBinaryTree<Symbol> parsePostfixExpression(list<string> tokens) {
+LinkedBinaryTree<Symbol> parsePostfixExpression(list<string> tokens){
   stack < LinkedBinaryTree<Symbol> >st;
-  for(list <string> :: iterator i = tokens.begin(); tokens[i] != '#'; i++)
+  for(list <string>::iterator i = tokens.begin(); tokens[i] != '#'; i++)
   {
     Symbol a(*i);
     LinkedBinaryTree<Symbol> tr;
@@ -38,58 +38,65 @@ LinkedBinaryTree<Symbol> parsePostfixExpression(list<string> tokens) {
     }
     st.push(tr);
   }
-  return st.top();
+  if(!st.empty())
+    return st.top();
+  else
+    return LinkedBinaryTree<Symbol>();
 }
-void print_inorder(const LinkedBinaryTree<Symbol>& tree) {
-  stack < typename LinkedBinaryTree<Symbol>::Position > st;
-  LinkedBinaryTree<Symbol> currentNode = tree.root();
-  while(1){
-    while(!currentNode.isNull())
-    {
-      if(*currentNode.isOperator())
-        cout << '(';
-      st.push(currentNode);
-      currentNode = currentNode.left();
+void print_inorder(const LinkedBinaryTree<Symbol>& tree){
+  if(!tree.empty())
+  {
+    stack < typename LinkedBinaryTree<Symbol>::Position > st;
+    LinkedBinaryTree<Symbol> currentNode = tree.root();
+    while(1){
+      while(!currentNode.isNull())
+      {
+        if(*currentNode.isOperator())
+          cout << '(';
+        st.push(currentNode);
+        currentNode = currentNode.left();
+      }
+      if(st.empty())
+        return;
+      currentNode = st.top();
+      st.pop();
+      cout << *currentNode;
+      currentNode = currentNode.right();
     }
-    if(st.empty())
-      return;
-    currentNode = st.top();
-    st.pop();
-    cout << *currentNode;
-    currentNode = currentNode.right();
   }
 }
 void print_postorder(const LinkedBinaryTree<Symbol>& tree) {
-  stack < typename LinkedBinaryTree<Symbol>::Position > st;
-  stack < typename LinkedBinaryTree<Symbol>::Position > res;
-  if(tree.empty())
-    throw runtime_error("Empty tree.");
-  st.push(tree.root());
-  while(!st.empty())
+  if(!tree.empty())
   {
-    typename LinkedBinaryTree<Symbol>::Position a = st.top();
-    st.pop();
-    res.push(a);
-    if(*a.left())
-      st.push(a.left());
-    if(*a.right())
-      st.push(a.right());
-  }
-  while(!res.empty())
-  {
-    cout << *res.top();
-    res.pop();
+    stack < typename LinkedBinaryTree<Symbol>::Position > st;
+    stack < typename LinkedBinaryTree<Symbol>::Position > res;
+    st.push(tree.root());
+    while(!st.empty())
+    {
+      typename LinkedBinaryTree<Symbol>::Position a = st.top();
+      st.pop();
+      res.push(a);
+      if(*a.left())
+        st.push(a.left());
+      if(*a.right())
+        st.push(a.right());
+    }
+    while(!res.empty())
+    {
+      cout << *res.top();
+      res.pop();
+    }
   }
 }
 int findMinimumDepth(const LinkedBinaryTree<Symbol>& tree, const Symbol& sym) {
-  list <Position> a = tree.positions();
+  list < typename LinkedBinaryTree<Symbol>::Position > a = tree.positions();
   int h = tree.height()+1;
-  for(list <Position>::iterator i = a.begin(); i != a.end(); i++)
+  for(list < typename LinkedBinaryTree<Symbol>::Position >::iterator i = a.begin(); i != a.end(); i++)
   {
     if(**i == sym)
     {
       int c = 0;
-      Position t = *i;
+      typename LinkedBinaryTree<Symbol>::Position t = *i;
       while(!t.isNull())
       {
         c++;
@@ -106,8 +113,8 @@ int findMinimumDepth(const LinkedBinaryTree<Symbol>& tree, const Symbol& sym) {
 
 
 void substitute(const LinkedBinaryTree<Symbol>& tree, const Symbol& variable, const Symbol& constant) {
-  list <Position> a = tree.positions();
-  for(list <Position>::iterator i = a.begin(); i != a.end(); i++)
+  list < typename LinkedBinaryTree<Symbol>::Position > a = tree.positions();
+  for(list < typename LinkedBinaryTree<Symbol>::Position >::iterator i = a.begin(); i != a.end(); i++)
   {
     if(**i == variable)
       **i = constant;
