@@ -7,12 +7,14 @@
 //
 // Artyom Chen, 20162017, artychen13@gmail.com
 //
-
 #ifndef LINKED_BINARY_TREE_H
 #define LINKED_BINARY_TREE_H
+
 #include <list>
 #include <stdexcept>
+
 using namespace std;
+
 template <typename Elem>
 class LinkedBinaryTree{
 protected:
@@ -49,7 +51,7 @@ public:
     friend class LinkedBinaryTree;
   };
 protected:
-  typedef std::list<Position> PositionList;
+  typedef list<Position> PositionList;
   void preorder(Node *v, PositionList&pl) const;
 public:
   LinkedBinaryTree();
@@ -85,18 +87,18 @@ bool LinkedBinaryTree<Elem>::empty() const
   return n == 0;
 }
 template <typename Elem>
-LinkedBinaryTree<Elem>::Position LinkedBinaryTree<Elem>::root() const
+typename LinkedBinaryTree<Elem>::Position LinkedBinaryTree<Elem>::root() const
 {
   if(_root)
     return Position(_root);
-  throw runtime_error("Tree is empty");
+  throw runtime_error("Tree is empty.");
 }
 template <typename Elem>
-LinkedBinaryTree<Elem>::PositionList LinkedBinaryTree<Elem>::positions() const
+typename LinkedBinaryTree<Elem>::PositionList LinkedBinaryTree<Elem>::positions() const
 {
   PositionList pl;
   if(!_root)
-    throw runtime_error("NULL root.");
+    throw runtime_error("Tree is empty.");
   preorder(_root, pl);
   return pl;
 }
@@ -104,7 +106,7 @@ template <typename Elem>
 void LinkedBinaryTree<Elem>::addRoot()
 {
   if(_root)
-    throw runtime_error("Tree is non-empty.");
+    throw runtime_error("Tree is not empty.");
   _root = new Node;
   n = 1;
 }
@@ -132,7 +134,7 @@ void LinkedBinaryTree<Elem>::expandExternal(const Position &p)
   n+=2;
 }
 template <typename Elem>
-LinkedBinaryTree<Elem>::Position LinkedBinaryTree<Elem>::removeAboveExternal(const Position&p)
+typename LinkedBinaryTree<Elem>::Position LinkedBinaryTree<Elem>::removeAboveExternal(const Position&p)
 {
     if(p.isNull())
       throw runtime_error("NULL node.");
@@ -168,16 +170,16 @@ int LinkedBinaryTree<Elem>::height() const
     throw runtime_error("Tree is empty");
   PositionList pl = positions();
   int h = 0;
-  for(PositionList::iterator i = pl.begin(); i != pl.end(); i++)
+  for(typename PositionList::iterator i = pl.begin(); i != pl.end(); i++)
   {
     if(i->isExternal())
     {
       int c = 0;
-      i = i->par;
-      while(i != NULL)
+      Position t = *i;
+      while(!t.isNull())
       {
         c++;
-        i = i->par;
+        t = t.parent();
       }
       if(c > h)
         h = c;
@@ -189,36 +191,31 @@ template <typename Elem>
 void LinkedBinaryTree<Elem>::attachLeftSubtree(const Position&p, LinkedBinaryTree&subtree)
 {
   if(p.left().v)
-  {
     throw runtime_error("Node p has left child.");
-  }
   p.left().v = subtree.root().v;
 }
 template <typename Elem>
 void LinkedBinaryTree<Elem>::attachRightSubtree(const Position&p, LinkedBinaryTree&subtree)
 {
   if(p.right().v)
-  {
     throw runtime_error("Node p has right child.");
-  }
   p.right().v = subtree.root().v;
 }
 template <typename Elem>
 void LinkedBinaryTree<Elem>::removeSubtree(const Position &p)
 {
-  if(!p.isNull())
+  if(p.isNull())
+    throw runtime_error("Empty subtree.");
+  if(p.isExternal())
   {
-    if(p.isExternal())
-    {
-      delete p.v;
-    }else
-    {
-      Position l = p.left();
-      Position r = p.right();
-      delete p.v;
-      removeSubtree(l);
-      removeSubtree(r);
-    }
+    delete p.v;
+  }else
+  {
+    Position l = p.left();
+    Position r = p.right();
+    delete p.v;
+    removeSubtree(l);
+    removeSubtree(r);
   }
 }
 #endif
