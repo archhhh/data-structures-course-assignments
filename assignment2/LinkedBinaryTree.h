@@ -29,31 +29,29 @@ protected:
     };
 public:
   class Position{
-  private:
-    Node *v;
-  public:
-    Position(Node *_v = NULL)
-    {v = _v;}
-    Elem& operator*() const
-    {return v->elem;}
-    Position left() const
-    {return Position(v->left);}
-    Position right() const
-    {return Position(v->right);}
-    Position parent() const
-    {return Position(v->par);}
-    bool isRoot() const
-    {return v->par == NULL;}
-    bool isExternal() const
-    {return v->left == NULL && v->right == NULL;};
-    bool isNull()const
-    {return v == NULL;}
-    friend class LinkedBinaryTree;
+    private:
+      Node *v;
+    public:
+      Position(Node *_v = NULL)
+      {v = _v;}
+      Elem& operator*() const
+      {return v->elem;}
+      Position left() const
+      {return Position(v->left);}
+      Position right() const
+      {return Position(v->right);}
+      Position parent() const
+      {return Position(v->par);}
+      bool isRoot() const
+      {return v->par == NULL;}
+      bool isExternal() const
+      {return v->left == NULL && v->right == NULL;};
+      bool isNull()const
+      {return v == NULL;}
+      friend class LinkedBinaryTree;
   };
-protected:
-  typedef list<Position> PositionList;
-  void preorder(Node *v, PositionList&pl) const;
 public:
+  typedef list<Position> PositionList;
   LinkedBinaryTree();
   int size() const;
   bool empty() const;
@@ -69,11 +67,15 @@ public:
 private:
   Node* _root;
   int n;
+protected:
+  void preorder(Node *v, PositionList&pl) const;
 };
+
+
 template <typename Elem>
 LinkedBinaryTree<Elem>::LinkedBinaryTree()
 {
-  root = NULL;
+  _root = NULL;
   n = 0;
 }
 template <typename Elem>
@@ -96,10 +98,9 @@ typename LinkedBinaryTree<Elem>::Position LinkedBinaryTree<Elem>::root() const
 template <typename Elem>
 typename LinkedBinaryTree<Elem>::PositionList LinkedBinaryTree<Elem>::positions() const
 {
-  PositionList pl;
-  if(!_root)
-    throw runtime_error("Tree is empty.");
-  preorder(_root, pl);
+  typename LinkedBinaryTree<Elem>::PositionList pl;
+  if(_root)
+    preorder(_root, pl);
   return pl;
 }
 template <typename Elem>
@@ -156,7 +157,7 @@ typename LinkedBinaryTree<Elem>::Position LinkedBinaryTree<Elem>::removeAboveExt
         gpar->left = sib;
       else
         gpar->right = sib;
-        sib->par = gpar;
+      sib->par = gpar;
     }
     delete w;
     delete v;
@@ -168,14 +169,15 @@ int LinkedBinaryTree<Elem>::height() const
 {
   if(!_root)
     throw runtime_error("Tree is empty");
-  PositionList pl = positions();
+  typename LinkedBinaryTree<Elem>::PositionList pl = positions();
   int h = 0;
-  for(typename PositionList::iterator i = pl.begin(); i != pl.end(); i++)
+  for(typename LinkedBinaryTree<Elem>::PositionList::iterator i = pl.begin(); i != pl.end(); i++)
   {
-    if(i->isExternal())
+    if((*i).isExternal())
     {
       int c = 0;
       Position t = *i;
+      t = t.parent();
       while(!t.isNull())
       {
         c++;
@@ -190,32 +192,38 @@ int LinkedBinaryTree<Elem>::height() const
 template <typename Elem>
 void LinkedBinaryTree<Elem>::attachLeftSubtree(const Position&p, LinkedBinaryTree&subtree)
 {
-  if(p.left().v)
+  if(!p.left().isNull())
     throw runtime_error("Node p has left child.");
-  p.left().v = subtree.root().v;
+  (p.v)->left = subtree.root().v;
+  subtree.root().v->par = p.v;
+  n += subtree.n;
 }
 template <typename Elem>
 void LinkedBinaryTree<Elem>::attachRightSubtree(const Position&p, LinkedBinaryTree&subtree)
 {
-  if(p.right().v)
+  if(!p.right().isNull())
     throw runtime_error("Node p has right child.");
-  p.right().v = subtree.root().v;
+  (p.v)->right = subtree.root().v;
+  subtree.root().v->par = p.v;
+  n += subtree.n;
 }
 template <typename Elem>
 void LinkedBinaryTree<Elem>::removeSubtree(const Position &p)
 {
   if(p.isNull())
     throw runtime_error("Empty subtree.");
+  Node * old = p.v;
   if(p.isExternal())
   {
-    delete p.v;
+    delete old;
   }else
   {
     Position l = p.left();
     Position r = p.right();
-    delete p.v;
+    delete old;
     removeSubtree(l);
     removeSubtree(r);
   }
+  n--;
 }
 #endif
