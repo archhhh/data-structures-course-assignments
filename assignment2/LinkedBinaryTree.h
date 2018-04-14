@@ -212,15 +212,14 @@ void LinkedBinaryTree<Elem>::removeSubtree(const Position &p)
 {
   if(p.isNull())
     throw runtime_error("Empty subtree.");
-  Node * old = p.v;
   if(p.isExternal())
   {
-    delete old;
+    delete p.v;
   }else
   {
     Position l = p.left();
     Position r = p.right();
-    delete old;
+    delete p.v;
     removeSubtree(l);
     removeSubtree(r);
   }

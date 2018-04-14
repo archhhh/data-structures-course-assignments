@@ -5,7 +5,6 @@
 // Moreover, please describe the implementation of your functions here.
 // You will have to submit this file.
 //
-
 #include <iostream>
 #include <stdexcept>
 #include <list>
@@ -46,29 +45,32 @@ LinkedBinaryTree<Symbol> parsePostfixExpression(list<string> tokens){
   else
     return LinkedBinaryTree<Symbol>();
 }
-void print_inorder_recursive(const LinkedBinaryTree<Symbol>::Position& root)
+void print_inorder_recursive(const LinkedBinaryTree<Symbol>::Position& node)
 {
-  if(root.isExternal())
+  if(node.isExternal())
   {
-    cout << *root << ' ';
+    cout << *node << ' ';
   }else
   {
     cout << "( ";
-    print_inorder_recursive(root.left());
-    cout << *root << ' ';
-    print_inorder_recursive(root.right());
-    cout << ") ";
+    print_inorder_recursive(node.left());
+    cout << *node << ' ';
+    print_inorder_recursive(node.right());
+    cout << ")";
+    if(!node.isRoot())
+      cout << ' ';
   }
 }
 void print_inorder(const LinkedBinaryTree<Symbol>& tree){
-   print_inorder_recursive(tree.root());
+   if(!tree.empty())
+    print_inorder_recursive(tree.root());
 }
 void print_postorder(const LinkedBinaryTree<Symbol>& tree) {
   if(!tree.empty())
   {
     stack < LinkedBinaryTree<Symbol>::Position > st;
     stack < LinkedBinaryTree<Symbol>::Position > res;
-    st.push(tree.root());;
+    st.push(tree.root());
     while(!st.empty())
     {
       LinkedBinaryTree<Symbol>::Position a = st.top();
