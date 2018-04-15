@@ -31,7 +31,7 @@
   If tree is empty, throws exception, otherwise it goes through positions of all nodes. If the node is external, then checks the depth of
   the node. Returns maximum depth of all external nodes; attachLeftSubtree, given Position object and LinkedBinaryTree object, attachs LinkedBinaryTree
   object as left subtree to the tree at Position object. Throws exception, if Position object has left child. Does not do anything,
-  if the Position object points to NULL. Cleans LinkedBinaryTree object; attachRightSubtree is implemented as attachLeftSubtree;
+  if the Position object points to NULL and subtree is empty. Cleans LinkedBinaryTree object; attachRightSubtree is implemented as attachLeftSubtree;
   removeSubtree, given Position object pointing to the root of subtree, deletes the subtree. If Position object points to NULL node, does nothing,
   otherwise, deletes the tree one by one using recursion, where base case is external node.
 
@@ -220,7 +220,7 @@ int LinkedBinaryTree<Elem>::height() const
 template <typename Elem>
 void LinkedBinaryTree<Elem>::attachLeftSubtree(const Position&p, LinkedBinaryTree&subtree)
 {
-  if(!p.isNull())
+  if(!p.isNull() && !subtree.empty())
   {
     if(!p.left().isNull())
       throw runtime_error("Node p has left child.");
@@ -234,7 +234,7 @@ void LinkedBinaryTree<Elem>::attachLeftSubtree(const Position&p, LinkedBinaryTre
 template <typename Elem>
 void LinkedBinaryTree<Elem>::attachRightSubtree(const Position&p, LinkedBinaryTree&subtree)
 {
-  if(!p.isNull())
+  if(!p.isNull() && !subtree.empty() )
   {
     if(!p.right().isNull())
       throw runtime_error("Node p has right child.");
