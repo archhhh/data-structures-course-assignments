@@ -9,7 +9,8 @@
   parsePostfixExpression: given postorder expression, stores it in LinkedBinaryTree in postorder manner. Function is implemented, using stack of
   LinkedBinaryTree objects. As we go through the list, we store each token in a separate LinkedBinaryTree. If the token is operand, we simply
   put the tree into stack. If the token is operator, we take trees from the stack and append them to the current tree. If there are no trees available,
-  throws exception, otherwise the resultant tree is stored again in stack.
+  throws exception, otherwise the resultant tree is stored again in stack. The exception is thrown, if after iteration there is not exactly one element in the stack,
+  which means, that tree is not generated.
   print_inorder: implemented, using utility function print_inorder_recursive, which prints nodes of LinkedBinaryTree object in inorder manner, which
   results in infix expression output. print_inorder_recursive takes Position object, initally pointing to root. If it reaches external Node, it simply
   outputs the value of the node, otherwise, "( " is printed, then the function calls itself recursively, passing Position object's left child, which
@@ -67,10 +68,10 @@ LinkedBinaryTree<Symbol> parsePostfixExpression(list<string> tokens){
     }
     st.push(tr);
   }
-  if(!st.empty())
+  if(st.size() == 1)
     return st.top();
   else
-    return LinkedBinaryTree<Symbol>();
+    throw runtime_error("Invalid expression.");
 }
 void print_inorder_recursive(const LinkedBinaryTree<Symbol>::Position& node)
 {
