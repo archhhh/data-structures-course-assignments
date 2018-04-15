@@ -250,6 +250,13 @@ void LinkedBinaryTree<Elem>::removeSubtree(const Position &p)
 {
   if(!p.isNull())
   {
+    if(!p.parent().isNull())
+    {
+      if((p.parent().v)->right == p.v)
+        (p.parent().v)->right = NULL;
+      if((p.parent().v)->left == p.v)
+        (p.parent().v)->left = NULL;
+    }
     if(p.isExternal())
     {
       delete p.v;
@@ -258,6 +265,8 @@ void LinkedBinaryTree<Elem>::removeSubtree(const Position &p)
       Position l = p.left();
       Position r = p.right();
       delete p.v;
+      (l.v)->par = NULL;
+      (r.v)->par = NULL;
       removeSubtree(l);
       removeSubtree(r);
     }

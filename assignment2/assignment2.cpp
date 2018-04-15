@@ -27,11 +27,10 @@
   substitute: given tree, symbol variable and symbol constant, function changes value of each node containing symbol variable to symbol constant.
   Function iterates through positions of all nodes, and if current node's value is equal to variable, then the value is changed to constant.
   simplify_subtree: given tree, containing expression, function simplifes the tree, evaluating all the subtrees, whose external nodes are constant values.
-  The implementation combines both of parsePostfixExpression and print_postorder. First, tree is traversed in postorder manner and all the nodes
-  are stored as Position objects in PositionList. This PositionList contains expression in postorder notation. Then as in parsePostfixExpression,
-  function iterates through the list, but if the operator is encountered and two operands poped from the stack are constants, then instead of
-  attaching the trees, expression is evaluated and the value stored in the tree tr and then pushed to the stack. If there is division by 0 , functions
-  throws exception.
+  The implementation is as follows. Function iterates through all positions in a given tree. If it finds the operator, it checks, whether the node's children are constants.
+  If they are, division by 0 is checked. If the expression is division by 0 , throws exception, otherwise it changes the node's value that contained operator to the evaluated
+  expression. Then, left and right children are removed from the tree. The procedure continues until boolean variable ev is false. Starting every iteration, ev is assigned
+  to false, and if tree is modified, ev is set to true.
    */
 #include <iostream>
 #include <stdexcept>
@@ -152,57 +151,24 @@ void substitute(const LinkedBinaryTree<Symbol>& tree, const Symbol& variable, co
 void simplify_subtree(LinkedBinaryTree<Symbol>& tree) {
   if(!tree.empty())
   {
-    stack < LinkedBinaryTree<Symbol>::Position > st;
-    stack < LinkedBinaryTree<Symbol>::Position > res;
-    st.push(tree.root());
-    while(!st.empty())
-    {
-      LinkedBinaryTree<Symbol>::Position a = st.top();
-      st.pop();
-      res.push(a);
-      if(!a.left().isNull())
-        st.push(a.left());
-      if(!a.right().isNull())
-        st.push(a.right());
-    }
-    typename LinkedBinaryTree<Symbol>::PositionList a;
-    while(!res.empty())
-    {
-      a.push_back(res.top());
-      res.pop();
-    }
-    stack < LinkedBinaryTree<Symbol> >temp;
-    for(typename LinkedBinaryTree<Symbol>::PositionList::iterator i = a.begin(); i != a.end(); i++)
-    {
-      LinkedBinaryTree<Symbol> tr;
-      tr.addRoot();
-      LinkedBinaryTree<Symbol>::Position b = tr.root();
-      *b = **i;
-      if((**i).isOperator())
+    bool ev;
+    do {
+      ev = false;
+      typename LinkedBinaryTree<Symbol>::PositionList a = tree.positions();
+      for(typename LinkedBinaryTree<Symbol>::PositionList::iterator i = a.begin(); i != a.end(); i++)
       {
-        if(temp.empty())
-          throw runtime_error("Invalid expression.");
-        LinkedBinaryTree<Symbol> right = temp.top();
-        temp.pop();
-        if(temp.empty())
-          throw runtime_error("Invalid expression.");
-        LinkedBinaryTree<Symbol> left = temp.top();
-        temp.pop();
-        if((*right.root()).isConstant() && (*left.root()).isConstant())
+        if(!(*i).isExternal() && (*((*i).left())).isConstant() && (*((*i).right())).isConstant())
         {
           if((**i).getOperator() == 3)
-            if((*right.root()).getConstant() == 0)
+            if((*((*i).right())).getConstant() == 0)
               throw runtime_error("Divide by 0");
-          *b = Symbol((**i).compute((*left.root()).getConstant(), (*right.root()).getConstant()));
-        }else
-        {
-          tr.attachLeftSubtree(b, left);
-          tr.attachRightSubtree(b, right);
+          **i = Symbol((**i).compute((*((*i).left())).getConstant(), (*((*i).right())).getConstant()));
+          tree.removeSubtree((*i).left());
+          tree.removeSubtree((*i).right());
+          ev = true;
         }
       }
-      temp.push(tr);
-    }
-    if(!temp.empty())
-      tree = temp.top();
+    } while(ev);
+
   }
 }

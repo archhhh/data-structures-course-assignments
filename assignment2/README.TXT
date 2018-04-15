@@ -11,3 +11,6 @@
 // Notice that it is not a report of your assignment.
 //
 
+Artyom Chen, 20162017, artychen13@gmail.com
+
+All parts were implemented.
