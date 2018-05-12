@@ -73,7 +73,7 @@ bool HeapPriorityQueue<E,C>::empty() const{
 template<typename E, typename C>
 typename HeapPriorityQueue<E, C>::Position HeapPriorityQueue<E,C>:: insert(const E&e){
   T.addLast(e);
-  typename ArrayCompleteTree<E>::Position last = T.last();
+  Position last = T.last();
   bubbleUp(last);
   return last;
 }

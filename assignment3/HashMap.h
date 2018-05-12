@@ -44,7 +44,7 @@ class HashMap {
 public:
   class Entry{
   public:
-    Entry(const K&k = K(), const V& v = V()):
+    Entry(const K& k = K(), const V& v = V()):
     _key(k), _value(v){}
     const K& key() const{ return _key;}
     V& value(){return _value;}
@@ -117,6 +117,10 @@ void HashMap<K,V,H>::eraser(const typename HashMap<K, V, H>::Iterator&p)
 }
 template <typename K, typename V, typename H>
 typename HashMap<K, V, H>::Entry& HashMap<K,V,H>::Iterator::operator*() const{
+  if(bkt == ba->end())
+    throw runtime_error("Wrong iterator.");
+  if(endOfBkt(*this))
+    throw runtime_error("Wrong iterator.");
   return *ent;
 }
 template <typename K, typename V, typename H>
