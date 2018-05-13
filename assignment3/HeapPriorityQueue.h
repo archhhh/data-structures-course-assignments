@@ -114,9 +114,9 @@ void HeapPriorityQueue<E,C>::bubbleDown(const typename HeapPriorityQueue<E, C>::
   while(T.hasLeft(u))
   {
     Position v = T.left(u);
-    if(T.hasRight(u) && isLess(*T.right(u), *v))
+    if(T.hasRight(u) && isLess(*(T.right(u)), *v))
       v = T.right(u);
-    if(isLess(*u, *v))
+    if(isLess(*v, *u))
       T.swap(u,v);
     else
       break;

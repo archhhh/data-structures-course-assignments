@@ -252,6 +252,7 @@ void ArrayCompleteTree<E>::removeLast(){
   if(n == 0)
     throw runtime_error("Empty tree.");
   n--;
+  cleanup();
 }
 template<typename E>
 void ArrayCompleteTree<E>::swap(const Position& p, const Position &q){
@@ -284,7 +285,7 @@ void ArrayCompleteTree<E>::cleanup(){
     for(int i = 0; i < n; i++)
       _v[i] = v[i];
     for(int i = n; i < vsize; i++)
-      v[i].clear;
+      v[i].clear();
     delete [] v;
     v = _v;
     vsize = n;

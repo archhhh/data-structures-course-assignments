@@ -117,11 +117,11 @@ void HashMap<K,V,H>::eraser(const typename HashMap<K, V, H>::Iterator&p)
 }
 template <typename K, typename V, typename H>
 typename HashMap<K, V, H>::Entry& HashMap<K,V,H>::Iterator::operator*() const{
-  if(bkt == ba->end())
+/*  if(bkt == ba->end())
     throw runtime_error("Wrong iterator.");
   if(endOfBkt(*this))
     throw runtime_error("Wrong iterator.");
-  return *ent;
+  */return *ent;
 }
 template <typename K, typename V, typename H>
 bool HashMap<K,V,H>::Iterator::operator==(const typename HashMap<K,V,H>::Iterator &p) const{
