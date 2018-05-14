@@ -167,7 +167,7 @@ template<typename E>
 typename ArrayCompleteTree<E>::Position  ArrayCompleteTree<E>::parent(const Position&p) const{
   if(isRoot(p))
     throw runtime_error("No parent.");
-  return Position(this, v[(((p.loc)->i)+1)/2].loc);
+  return Position(this, v[(((p.loc)->i)-1)/2].loc);
 }
 template<typename E>
 bool ArrayCompleteTree<E>::hasLeft(const Position &p) const{
@@ -257,6 +257,7 @@ void ArrayCompleteTree<E>::removeLast(){
 template<typename E>
 void ArrayCompleteTree<E>::swap(const Position& p, const Position &q){
   if(!p.tree || !q.tree)
+    throw runtime_error("Wrong position.");
   if(p.tree != q.tree)
     throw runtime_error("Wrong position.");
   if(p.tree != this)
@@ -272,7 +273,7 @@ void ArrayCompleteTree<E>::swap(const Position& p, const Position &q){
   *q = temp_e;
   int temp_ind = p.loc->i;
   p.loc->i = q.loc->i;
-  q.loc->i = p.loc->i;
+  q.loc->i = temp_ind;
   v[p.loc->i].loc = p.loc;
   v[q.loc->i].loc = q.loc;
 }
