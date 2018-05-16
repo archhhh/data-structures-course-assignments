@@ -5,6 +5,18 @@
 // Moreover, please describe the implementation of your functions here.
 // You will have to submit this file.
 //
+/* Artyom Chen, 20162017, artychen13@unist.ac.kr
+  Implementation is based on the implementation of vector-based binary tree in the textbook and
+  description in the handout.
+  However, some functions should be explained.
+  HasRight, HasLeft, Root functions check whether the given position has right child, left child or if the given
+  position is root, using indexes. Every node in a given index has left child in 2*index+1 position and right children
+  in 2*index+2 position. So, it is simple to check the left and right children knowing that fact.
+  To check if the node is root, function simply checks if the index is 0.
+  Also, swap function slightly differs from the textbook's explanation. It also adjusts indexes in Locator objects in
+  given positions and changes locator pointers in corresponding LocationAwareEntry objects.
+*/
+
 
 #ifndef ASSIGNMENT3_ARRAYCOMPLETETREE_H
 #define ASSIGNMENT3_ARRAYCOMPLETETREE_H
@@ -112,34 +124,24 @@ bool ArrayCompleteTree<E>::Position::operator==(const Position &p) const{
 }
 template<typename E>
 E& ArrayCompleteTree<E>::Position::operator*() const{
-  if(!tree)
-    throw runtime_error("Wrong position.");
-  if(!loc)
-    throw runtime_error("Wrong position.");
-  if(loc->i < 0 || loc->i >= tree->n)
-    throw runtime_error("Wrong position.");
-  if(tree->v[loc->i].loc != loc)
-      throw runtime_error("Wrong position.");
   return tree->v[loc->i].e;
 }
 template<typename E>
 ArrayCompleteTree<E>::ArrayCompleteTree(int _vsize){
-  v = new LocationAwareEntry[10];
-  vsize = _vsize;
-  n = 0;
+  if(_vsize)
+  {
+    v = new LocationAwareEntry[_vsize];
+    vsize = _vsize;
+    n = 0;
+  }
 }
 template<typename E>
 ArrayCompleteTree<E>::ArrayCompleteTree(const ArrayCompleteTree& t){
-  LocationAwareEntry * _v;
-  _v = new LocationAwareEntry[t.vsize];
+  v = new LocationAwareEntry[t.vsize];
   vsize = t.vsize;
   n = t.n;
-  for(int i = 0; i < n;i++)
-    _v[i] = LocationAwareEntry((t.v)[i].e, (t.v)[i].loc->i);
   for(int i = 0; i < n; i++)
-    v[i].clear();
-  delete [] v;
-  v = _v;
+    v[i] = LocationAwareEntry((t.v)[i].e, (t.v)[i].loc->i);
 }
 template<typename E>
 ArrayCompleteTree<E>::~ArrayCompleteTree(){
@@ -164,55 +166,25 @@ typename ArrayCompleteTree<E>::Position  ArrayCompleteTree<E>::right(const Posit
   return Position(this, v[2*((p.loc)->i)+2].loc);
 }
 template<typename E>
-typename ArrayCompleteTree<E>::Position  ArrayCompleteTree<E>::parent(const Position&p) const{
+typename ArrayCompleteTree<E>::Position ArrayCompleteTree<E>::parent(const Position&p) const{
   if(isRoot(p))
     throw runtime_error("No parent.");
   return Position(this, v[(((p.loc)->i)-1)/2].loc);
 }
 template<typename E>
 bool ArrayCompleteTree<E>::hasLeft(const Position &p) const{
-  if(!p.tree)
-    throw runtime_error("Wrong position.");
-  if(!p.loc)
-    throw runtime_error("Wrong position.");
-  if(p.tree != this)
-    throw runtime_error("Wrong position.");
-  if((p.loc)->i < 0 || (p.loc)->i >= n)
-    throw runtime_error("Wrong position.");
-  if(p.tree->v[(p.loc)->i].loc != p.loc)
-    throw runtime_error("Wrong position.");
   if((2*((p.loc)->i)+1) >= n)
     return false;
   return true;
 }
 template<typename E>
 bool ArrayCompleteTree<E>::hasRight(const Position &p) const{
-  if(!p.tree)
-    throw runtime_error("Wrong position.");
-  if(!p.loc)
-    throw runtime_error("Wrong position.");
-  if(p.tree != this)
-    throw runtime_error("Wrong position.");
-  if((p.loc)->i < 0 || (p.loc)->i >= n)
-    throw runtime_error("Wrong position.");
-  if(p.tree->v[(p.loc)->i].loc != p.loc)
-    throw runtime_error("Wrong position.");
   if((2*((p.loc)->i)+2) >= n)
     return false;
   return true;
 }
 template<typename E>
 bool ArrayCompleteTree<E>::isRoot(const Position &p) const{
-  if(!p.tree)
-    throw runtime_error("Wrong position.");
-  if(!p.loc)
-    throw runtime_error("Wrong position.");
-  if(p.tree != this)
-    throw runtime_error("Wrong position.");
-  if((p.loc)->i < 0 || (p.loc)->i >= n)
-      throw runtime_error("Wrong position.");
-  if(p.tree->v[(p.loc)->i].loc != p.loc)
-      throw runtime_error("Wrong position.");
   if((p.loc->i) != 0)
       return false;
   return true;
@@ -237,59 +209,55 @@ void ArrayCompleteTree<E>::addLast(const E& e){
   }else
   {
     LocationAwareEntry* _v;
-    _v = new LocationAwareEntry[2*vsize];
+    _v = new LocationAwareEntry[2*vsize+1];
     for(int i = 0; i < n; i++)
       _v[i] = v[i];
     _v[n] = LocationAwareEntry(e, n);
     delete [] v;
     v = _v;
-    vsize = 2*vsize;
+    vsize = 2*vsize+1;
   }
-  n++;
+  ++n;
 }
 template<typename E>
 void ArrayCompleteTree<E>::removeLast(){
   if(n == 0)
     throw runtime_error("Empty tree.");
+  v[n-1].clear();
   n--;
   cleanup();
 }
 template<typename E>
 void ArrayCompleteTree<E>::swap(const Position& p, const Position &q){
-  if(!p.tree || !q.tree)
-    throw runtime_error("Wrong position.");
-  if(p.tree != q.tree)
-    throw runtime_error("Wrong position.");
-  if(p.tree != this)
-    throw runtime_error("Wrong position.");
-  if(!p.loc || !q.loc)
-    throw runtime_error("Wrong position.");
-  if((p.loc)->i < 0 || (p.loc)->i >= n ||(q.loc)->i < 0 || (q.loc)->i >= n)
-      throw runtime_error("Wrong position.");
-  if(p.tree->v[(p.loc)->i].loc != p.loc || q.tree->v[(q.loc)->i].loc != q.loc)
-      throw runtime_error("Wrong position.");
-  E temp_e = (*p);
+  E temp_e = *p;
   *p = *q;
   *q = temp_e;
-  int temp_ind = p.loc->i;
-  p.loc->i = q.loc->i;
-  q.loc->i = temp_ind;
-  v[p.loc->i].loc = p.loc;
-  v[q.loc->i].loc = q.loc;
+  int temp_ind = (p.loc)->i;
+  (p.loc)->i = (q.loc)->i;
+  (q.loc)->i = temp_ind;
+  v[(p.loc)->i].loc = p.loc;
+  v[(q.loc)->i].loc = q.loc;
 }
 template<typename E>
 void ArrayCompleteTree<E>::cleanup(){
   if(n < vsize)
   {
-    LocationAwareEntry* _v;
-    _v = new LocationAwareEntry[n];
-    for(int i = 0; i < n; i++)
-      _v[i] = v[i];
-    for(int i = n; i < vsize; i++)
-      v[i].clear();
-    delete [] v;
-    v = _v;
-    vsize = n;
+    if(n)
+    {
+      LocationAwareEntry* _v;
+      _v = new LocationAwareEntry[n];
+      for(int i = 0; i < n; i++)
+        _v[i] = v[i];
+      delete [] v;
+      v = _v;
+      vsize = n;
+    }else{
+      LocationAwareEntry* _v;
+      _v = new LocationAwareEntry[1];
+      delete [] v;
+      v = _v;
+      vsize = 1;
+    }
   }
 }
 #endif //ASSIGNMENT3_ARRAYCOMPLETETREE_H

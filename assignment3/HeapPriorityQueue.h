@@ -5,6 +5,20 @@
 // Moreover, please describe the implementation of your functions here.
 // You will have to submit this file.
 //
+/* Artyom Chen, 20162017, artychen13@unist.ac.kr
+  Most of implementation is as decribed in the book.
+  Two utility functions were added: BubbleUp, BubbleDown.
+  BubbleUp for a given node swaps it upward the binary tree, unless the value of the parent of the
+  given node is less than the node's.
+  BubbleDown for a given node swaps it downward the binary tree, unless the value of
+  the node is less than the node's children's.
+  Also remove and replace functions were added. Remove for a given node swaps it with last node, calls T.removeLast() and bubble downs the swapped last node.
+  If the size of the heap is 1, then simply calls T.removeLast();
+  Replace for a given node and value replaces node's value to the given value. If new value is more than old, bubble down the node, otherwise,
+  bubble up.
+
+*/
+
 
 #ifndef ASSIGNMENT3_HEAPPRIORITYQUEUE_H
 #define ASSIGNMENT3_HEAPPRIORITYQUEUE_H
@@ -71,7 +85,7 @@ bool HeapPriorityQueue<E,C>::empty() const{
   return T.size() == 0;
 }
 template<typename E, typename C>
-typename HeapPriorityQueue<E, C>::Position HeapPriorityQueue<E,C>:: insert(const E&e){
+typename HeapPriorityQueue<E, C>::Position HeapPriorityQueue<E,C>::insert(const E&e){
   T.addLast(e);
   Position last = T.last();
   bubbleUp(last);
@@ -87,9 +101,14 @@ void HeapPriorityQueue<E,C>::removeMin(){
 }
 template<typename E, typename C>
 void HeapPriorityQueue<E,C>::remove(const HeapPriorityQueue<E, C>::Position &u){
-  T.swap(u, T.last());
-  T.removeLast();
-  bubbleDown(u);
+  if(size() == 1)
+    T.removeLast();
+  else{
+    Position a = T.last();
+    T.swap(u, a);
+    T.removeLast();
+    bubbleDown(a);
+  }
 }
 template<typename E, typename C>
 typename HeapPriorityQueue<E, C>::Position HeapPriorityQueue<E,C>::replace(const typename HeapPriorityQueue<E, C>::Position &p, const E& e){
@@ -117,7 +136,7 @@ void HeapPriorityQueue<E,C>::bubbleDown(const typename HeapPriorityQueue<E, C>::
     if(T.hasRight(u) && isLess(*(T.right(u)), *v))
       v = T.right(u);
     if(isLess(*v, *u))
-      T.swap(u,v);
+        T.swap(u,v);
     else
       break;
   }
