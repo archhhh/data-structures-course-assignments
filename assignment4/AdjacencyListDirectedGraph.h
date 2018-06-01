@@ -401,8 +401,10 @@ public:
   Vertex insertVertex(const V& x) {
     VertexObject vert(x);
     vertex_collection.push_back(vert);
+    inc_edges_collection.push_back(EdgeList());
     VertexObject & _vert = *(--vertex_collection.end());
     _vert.pos = --vertex_collection.end();
+    _vert.inc_edges_pos = --inc_edges_collection.end();
     return Vertex(&(*(--vertex_collection.end())));
   }
 
