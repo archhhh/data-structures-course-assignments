@@ -337,7 +337,7 @@ double FlightMap::calcRouteDistance(const list<string> route){
     FlightGraph::Vertex v1, v2;
     findAirport(v1, *iter);
     findAirport(v2, *next);
-    result += *v1.outgoingEdge(v2);
+    result += *(v1.outgoingEdge(v2));
   }
   return result;
 }

@@ -402,10 +402,10 @@ public:
     VertexObject vert(x);
     vertex_collection.push_back(vert);
     inc_edges_collection.push_back(EdgeList());
-    VertexObject & _vert = *(--vertex_collection.end());
-    _vert.pos = --vertex_collection.end();
-    _vert.inc_edges_pos = --inc_edges_collection.end();
-    return Vertex(&(*(--vertex_collection.end())));
+    VertexObject & _vert = *(vertex_collection.rbegin());
+    _vert.pos = vertex_collection.rbegin();
+    _vert.inc_edges_pos = inc_edges_collection.rbegin();
+    return Vertex(&(*(vertex_collection.rbegin())));
   }
 
   /*
@@ -422,13 +422,13 @@ public:
       throw runtime_error("Edge already exists.");
     EdgeObject edge(v, w, x);
     edge_collection.push_back(edge);
-    EdgeObject& _edge = *(--edge_collection.end());
-    _edge.pos = (--edge_collection.end());
-    (*(v.v_obj->inc_edges_pos)).push_back(Edge(&(*(--edge_collection.end()))));
-    _edge.origin_inc_edges_pos = --((*(v.v_obj->inc_edges_pos)).end());
-    (*(w.v_obj->inc_edges_pos)).push_back(Edge(&(*(--edge_collection.end()))));
-    _edge.dest_inc_edges_pos = --((*(w.v_obj->inc_edges_pos)).end());
-    return Edge(&(*(--edge_collection.end())));
+    EdgeObject& _edge = *(edge_collection.rbegin());
+    _edge.pos = (edge_collection.rbegin());
+    (*(v.v_obj->inc_edges_pos)).push_back(Edge(&(*(edge_collection.rbegin()))));
+    _edge.origin_inc_edges_pos = (*(v.v_obj->inc_edges_pos)).rbegin();
+    (*(w.v_obj->inc_edges_pos)).push_back(Edge(&(*(edge_collection.rbegin()))));
+    _edge.dest_inc_edges_pos = (*(w.v_obj->inc_edges_pos)).rbegin();
+    return Edge(&(*(edge_collection.rbegin())));
   }
 
   /*
