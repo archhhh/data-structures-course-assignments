@@ -276,6 +276,7 @@ public:
       VertexList endVerticesList;
       endVerticesList.push_back(e_obj->origin_vertex);
       endVerticesList.push_back(e_obj->dest_vertex);
+      return endVerticesList;
     }
 
     /*
@@ -308,6 +309,10 @@ public:
         return true;
       if(e_obj->dest_vertex == edge.e_obj->origin_vertex)
         return true;
+      if(e_obj->origin_vertex == edge.e_obj->origin_vertex && !(e_obj->dest_vertex == edge.e_obj->dest_vertex))
+          return true;
+      if(e_obj->dest_vertex == edge.e_obj->dest_vertex && !(e_obj->origin_vertex == edge.e_obj->origin_vertex))
+          return true;
       return false;
     }
 
