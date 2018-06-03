@@ -5,7 +5,10 @@
 // Moreover, please describe the implementation of your functions here.
 // You will have to submit this file.
 //
-
+// Artyom Chen, 20162017, artychen13@unist.ac.kr
+/*
+  The implementation is as described in the textbook.
+*/
 #ifndef ASSIGNMENT5_ADJACENCYLISTDIRECTEDGRAPH_H
 #define ASSIGNMENT5_ADJACENCYLISTDIRECTEDGRAPH_H
 
@@ -373,7 +376,7 @@ public:
 public:
 
   /*
-   * Return the list of vertices i(--n this graph.
+   * Return the list of vertices in this graph.
    */
   VertexList vertices() {
     VertexList verticesList;

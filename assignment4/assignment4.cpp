@@ -5,7 +5,16 @@
 // Moreover, please describe the implementation of your functions here.
 // You will have to submit this file.
 //
+// Artyom Chen, 20162017, artychen13@unist.ac.kr
+/*
+  calcRouteDistance simply adds the values of the edges between the following vertices to the result and
+  returns the result. throws all the necessary exceptions.
+  findRoute uses DFS to find the route. findRouteUtil is implemented to be utilized in findRoute.
+  findReachableAirports uses findRoute to find all the reachable airports.
+  findShortestRoute implements Dijkstra Algorithm as described in the textbook.
+  printAllShortestRoutes uses findShortestRouteto find all the shortest routes.
 
+*/
 #include <iostream>
 #include <string>
 #include <stdexcept>
