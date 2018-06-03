@@ -328,8 +328,7 @@ void FlightMap::printRoute(const list<string> route) {
 /* -- */
 double FlightMap::calcRouteDistance(const list<string> route){
   double result = 0;
-  for(list<string>::const_iterator iter = route.begin(); iter != --route.end();){
-    list<string>::const_iterator next = ++iter;
+  for(list<string>::const_iterator iter = route.begin(), next = ++route.begin(); next != route.end(); ++iter, ++next){
     if(!isAirportExist(*iter))
       throw runtime_error("Airport does not exist.");
     if(!isConnectionExist(*iter, *next))
@@ -392,6 +391,7 @@ list<string> FlightMap::findReachableAirports(const string &airport){
     }
     iter++;
   }
+  return ans;
 }
 void FlightMap::printAllShortestRoutes(const string &airport){
   if(!isAirportExist(airport))
@@ -420,8 +420,8 @@ list<string> FlightMap::findShortestRoute(const string &airport1, const string &
   map<string, FlightGraph::Vertex>::iterator iter = airport_db.begin();
   while(iter != airport_db.end()){
     visited[iter->first] = false;
-    iter++;
     distance[iter->first] = 99999999;
+    iter++;
   }
   map <string, string> before;
   before[airport1] = "";
@@ -430,7 +430,7 @@ list<string> FlightMap::findShortestRoute(const string &airport1, const string &
   iter = airport_db.begin();
   while(iter != airport_db.end())
   {
-    min_heap.push(pair<string, int>(iter->first, distance[iter->first]));
+    min_heap.push(pair<string, double>(iter->first, distance[iter->first]));
     ++iter;
   }
   while(!min_heap.empty())

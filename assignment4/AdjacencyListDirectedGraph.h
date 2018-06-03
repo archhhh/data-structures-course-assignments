@@ -377,6 +377,7 @@ public:
       verticesList.push_back(Vertex(&(*iter)));
       iter++;
     }
+    return verticesList;
   }
 
   /*
