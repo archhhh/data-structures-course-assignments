@@ -444,9 +444,8 @@ public:
    * v - a vertex
    */
   void eraseVertex(const Vertex& v) {
-    EdgeItor iter = (*((v.v_obj)->inc_edges_pos)).begin();
-    while(iter != (*((v.v_obj)->inc_edges_pos)).end())
-      eraseEdge(*iter);
+    while(!(*((v.v_obj)->inc_edges_pos)).empty())
+      eraseEdge((*((v.v_obj)->inc_edges_pos)).front());
     inc_edges_collection.erase((v.v_obj)->inc_edges_pos);
     vertex_collection.erase(v.v_obj->pos);
   }
