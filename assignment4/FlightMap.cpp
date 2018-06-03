@@ -400,7 +400,7 @@ void FlightMap::printAllShortestRoutes(const string &airport){
   while(iter != airport_db.end()){
     if(iter->first != airport)
     {
-      list<string>route = findShortestRoute(iter->first, airport);
+      list<string>route = findShortestRoute(airport, iter->first);
       if(route.size() != 0)
       {
         printRoute(route);
