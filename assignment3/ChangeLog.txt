@@ -1,0 +1,4 @@
+Apr. 27: Remove the statements about the copy constructor and the destructor of LocationAwareEntry.
+
+Apr. 23: The assignment has been released.
+

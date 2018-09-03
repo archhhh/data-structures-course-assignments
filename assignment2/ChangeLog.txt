@@ -1,0 +1,5 @@
+Apr. 2: All occurrences of "ASSIGNMENT3" in #ifndef/#define/#endif statements
+have been replaced by "ASSIGNMENT2".
+
+Mar. 29: The assignment has been released.
+
